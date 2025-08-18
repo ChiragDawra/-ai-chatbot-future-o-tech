@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 import json
 import os
-from src.chatbot import AIChChatBot
+from src.enhanced_chatbot import EnhancedChatBot
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
 
-# Initialize the chatbot
-chatbot = AIChChatBot()
+# Initialize the enhanced chatbot
+chatbot = EnhancedChatBot()
 
 @app.route('/')
 def index():
