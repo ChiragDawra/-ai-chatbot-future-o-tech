@@ -125,7 +125,13 @@ The project successfully demonstrates:
 - ✅ **Competition Compliance**: All rules and requirements met
 - ✅ **Innovation Factor**: Advanced features beyond basic requirements
 
-**Status**: 🟢 **READY FOR SUBMISSION**
+**Status**: 🟢 **LIVE & DEPLOYED**
+
+## 🌐 **LIVE DEMO**
+**Production URL**: https://ai-chatbot-future-o-tech.netlify.app
+**GitHub Repository**: https://github.com/ChiragDawra/-ai-chatbot-future-o-tech
+
+🎉 **Your AI ChatBot is now live and accessible to Future-O-Tech judges!**
 
 ---
 

@@ -83,3 +83,6 @@ tb_logs/
 
 # Team project folder (not pushed to main repo)
 "team project"/
+
+# Local Netlify folder
+.netlify

@@ -1,8 +1,12 @@
 # 🤖 AI ChatBot - Future-O-Tech Event
 
+## 🌐 **[LIVE DEMO - Click Here!](https://ai-chatbot-future-o-tech.netlify.app)**
+
 ## Project Description
 
 An intelligent AI-powered chatbot that uses advanced natural language processing to understand user queries and respond intelligently. Perfect for answering FAQs, providing automated assistance, and engaging in meaningful conversations.
+
+**🚀 Live URL**: https://ai-chatbot-future-o-tech.netlify.app
 
 ### 🎯 Problem Statement
 **Simple AI-Powered Chatbot** – A conversational bot that uses basic natural language processing to understand user queries and respond intelligently. Ideal for answering FAQs or providing simple automated assistance.
