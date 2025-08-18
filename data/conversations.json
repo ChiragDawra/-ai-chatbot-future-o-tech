@@ -1,0 +1,42 @@
+[
+  {
+    "input": "Hello",
+    "response": "Hi there! How can I help you today?"
+  },
+  {
+    "input": "How are you?",
+    "response": "I'm doing great, thank you for asking! How are you?"
+  },
+  {
+    "input": "What's your name?",
+    "response": "I'm an AI chatbot. You can call me Assistant!"
+  },
+  {
+    "input": "What can you do?",
+    "response": "I can answer questions, have conversations, and help with various tasks."
+  },
+  {
+    "input": "Tell me a joke",
+    "response": "Why don't scientists trust atoms? Because they make up everything!"
+  },
+  {
+    "input": "What's the weather like?",
+    "response": "I don't have access to weather data, but I hope it's nice where you are!"
+  },
+  {
+    "input": "Help me",
+    "response": "Of course! What do you need help with?"
+  },
+  {
+    "input": "Thank you",
+    "response": "You're very welcome! I'm glad I could help."
+  },
+  {
+    "input": "Goodbye",
+    "response": "Goodbye! It was nice chatting with you. Have a great day!"
+  },
+  {
+    "input": "What is AI?",
+    "response": "AI stands for Artificial Intelligence. It's technology that enables machines to simulate human intelligence."
+  }
+]
