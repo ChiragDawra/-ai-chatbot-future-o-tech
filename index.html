@@ -1,504 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ChatBot - Future-O-Tech Event</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .chat-container {
-            width: 100%;
-            max-width: 800px;
-            height: 80vh;
-            min-height: 600px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            color: white;
-            text-align: center;
-        }
-
-        .chat-header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-
-        .chat-header p {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        .status-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #4CAF50;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #f8f9fa;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .message.user {
-            justify-content: flex-end;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            position: relative;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message.bot .message-content {
-            background: #e9ecef;
-            color: #333;
-            border-bottom-left-radius: 5px;
-        }
-
-        .message.user .message-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-
-        .message-time {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 5px;
-        }
-
-        .chat-input-container {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .chat-input-form {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            outline: none;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .chat-input:focus {
-            border-color: #667eea;
-        }
-
-        .send-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .send-button:hover {
-            transform: scale(1.05);
-        }
-
-        .send-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .typing-indicator {
-            display: none;
-            padding: 10px 16px;
-            background: #e9ecef;
-            border-radius: 18px;
-            margin-bottom: 15px;
-            max-width: 70%;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .typing-dots span {
-            width: 8px;
-            height: 8px;
-            background: #999;
-            border-radius: 50%;
-            animation: typing 1.4s infinite ease-in-out;
-        }
-
-        .typing-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .welcome-message {
-            text-align: center;
-            color: #666;
-            margin: 20px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            border: 2px dashed #ddd;
-        }
-
-        .welcome-message i {
-            font-size: 2rem;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .project-info {
-            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        .project-info a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .project-info a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .chat-container {
-                width: 95%;
-                height: 90vh;
-                border-radius: 10px;
-            }
-            
-            .message-content {
-                max-width: 85%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI ChatBot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4f46e5;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      font-size: 1.5rem;
+    }
+    #chatbox {
+      flex: 1;
+      width: 100%;
+      max-width: 800px;
+      margin: 10px auto;
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: auto;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .message {
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 70%;
+    }
+    .user {
+      background: #e0e7ff;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+    .bot {
+      background: #f3f4f6;
+      align-self: flex-start;
+      margin-right: auto;
+    }
+    #inputArea {
+      display: flex;
+      width: 100%;
+      max-width: 800px;
+      margin: 10px auto;
+    }
+    #messageInput {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+    #sendBtn {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin-left: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #sendBtn:hover {
+      background: #4338ca;
+    }
+  </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1><i class="fas fa-robot"></i> AI ChatBot</h1>
-            <p><span class="status-indicator"></span>Future-O-Tech Event - Live Demo</p>
-        </div>
-        
-        <div class="chat-messages" id="chatMessages">
-            <div class="welcome-message">
-                <i class="fas fa-comments"></i>
-                <h3>Welcome to Enhanced AI ChatBot!</h3>
-                <p>I'm an advanced conversational assistant trained on over <strong>219,000 real conversations</strong> from Cornell Movie Dialogs! Built for the Future-O-Tech event, I use large-scale datasets and natural language processing to provide human-like interactions.</p>
-                
-                <div class="project-info">
-                    <strong>🎯 Project:</strong> Enhanced AI-Powered Chatbot<br>
-                    <strong>🛠️ Tech:</strong> Large Dataset Training, Cornell Movie Dialogs, NLP<br>
-                    <strong>📊 Training Data:</strong> 219,579 conversation pairs<br>
-                    <strong>🐙 GitHub:</strong> <a href="https://github.com/ChiragDawra/-ai-chatbot-future-o-tech" target="_blank">View Source Code</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="chat-input-container">
-            <form class="chat-input-form" id="chatForm">
-                <input 
-                    type="text" 
-                    class="chat-input" 
-                    id="messageInput" 
-                    placeholder="Type your message here..." 
-                    autocomplete="off"
-                    required
-                >
-                <button type="submit" class="send-button" id="sendButton">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </form>
-        </div>
-    </div>
+  <header>🤖 AI ChatBot</header>
+  <div id="chatbox"></div>
+  <div id="inputArea">
+    <input type="text" id="messageInput" placeholder="Type a message..." />
+    <button id="sendBtn">Send</button>
+  </div>
 
-    <script>
-        class StaticChatBot {
-            constructor() {
-                this.chatMessages = document.getElementById('chatMessages');
-                this.chatForm = document.getElementById('chatForm');
-                this.messageInput = document.getElementById('messageInput');
-                this.sendButton = document.getElementById('sendButton');
-                
-                this.initializeEventListeners();
-                this.initializeFAQ();
-            }
-            
-            initializeEventListeners() {
-                this.chatForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.sendMessage();
-                });
-                
-                this.messageInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        this.sendMessage();
-                    }
-                });
-            }
-            
-            initializeFAQ() {
-                this.faqResponses = {
-                    'hello': "Hello! I'm your AI assistant. How can I help you today?",
-                    'hi': "Hi there! What can I do for you?",
-                    'help': "I'm here to help! You can ask me questions, have a conversation, or ask for assistance with various topics.",
-                    'what is your name': "I'm an AI chatbot created for the Future-O-Tech event. You can call me ChatBot!",
-                    'who are you': "I'm an AI-powered conversational assistant built using natural language processing.",
-                    'how are you': "I'm doing great, thank you for asking! How are you doing today?",
-                    'bye': "Goodbye! It was nice talking with you. Have a great day!",
-                    'goodbye': "Goodbye! It was nice talking with you. Have a great day!",
-                    'thank you': "You're welcome! I'm glad I could help.",
-                    'thanks': "You're welcome! Feel free to ask if you need anything else.",
-                    'what can you do': "I can answer questions, have conversations, provide information, and assist with various tasks. What would you like to know?",
-                    'weather': "I don't have access to real-time weather data, but I'd be happy to help you with other questions!",
-                    'time': "I don't have access to real-time data, but you can check your device for the current time.",
-                    'what is this chatbot': "This is an AI-powered chatbot created for the Future-O-Tech event using natural language processing.",
-                    'who created you': "I was created by a team of developers for the Future-O-Tech event as part of an AI project.",
-                    'what technology do you use': "I use advanced natural language processing with transformer models and machine learning techniques.",
-                    'how do you work': "I process your messages using AI algorithms to understand context and generate appropriate responses.",
-                    'what is future o tech': "Future-O-Tech is an innovation event where teams create AI and technology solutions to real-world problems.",
-                    'what is ai': "AI stands for Artificial Intelligence. It's technology that enables machines to simulate human intelligence.",
-                    'tell me about ai': "AI is fascinating! It involves creating systems that can perform tasks that typically require human intelligence.",
-                    'future': "Technology is rapidly evolving! The future holds exciting possibilities for AI and automation.",
-                    'technology': "Technology is rapidly evolving! The future holds exciting possibilities for AI and automation.",
-                    'learn': "Learning is wonderful! I'm here to help answer questions and provide information on various topics.",
-                    'project': "That sounds like an interesting project! What specific aspects are you working on?",
-                    'github': "You can find the source code for this project at: https://github.com/ChiragDawra/-ai-chatbot-future-o-tech"
-                };
-            }
-            
-            preprocessInput(text) {
-                return text.toLowerCase().trim().replace(/[^\w\s.,!?]/g, '');
-            }
-            
-            findResponse(userInput) {
-                const processed = this.preprocessInput(userInput);
-                
-                // Check for exact matches
-                if (this.faqResponses[processed]) {
-                    return this.faqResponses[processed];
-                }
-                
-                // Check for partial matches
-                for (const [key, response] of Object.entries(this.faqResponses)) {
-                    if (processed.includes(key) || key.split(' ').some(word => processed.includes(word))) {
-                        return response;
-                    }
-                }
-                
-                // Generate contextual responses
-                if (processed.includes('ai') || processed.includes('artificial intelligence')) {
-                    return "AI is fascinating! It involves creating systems that can perform tasks that typically require human intelligence.";
-                }
-                
-                if (processed.includes('future') || processed.includes('technology')) {
-                    return "Technology is rapidly evolving! The future holds exciting possibilities for AI and automation.";
-                }
-                
-                if (processed.includes('learn') || processed.includes('study')) {
-                    return "Learning is wonderful! I'm here to help answer questions and provide information on various topics.";
-                }
-                
-                if (processed.includes('project') || processed.includes('work')) {
-                    return "That sounds like an interesting project! What specific aspects are you working on?";
-                }
-                
-                if (processed.includes('?')) {
-                    return "That's a great question! While I might not have all the details, I'm happy to discuss it further.";
-                }
-                
-                // Fallback responses
-                const fallbacks = [
-                    "That's interesting! Could you tell me more about that?",
-                    "I understand. What else would you like to discuss?",
-                    "Thanks for sharing that. How can I help you further?",
-                    "I see. Is there anything specific you'd like to know?",
-                    "That's a good point. What other questions do you have?"
-                ];
-                
-                return fallbacks[Math.floor(Math.random() * fallbacks.length)];
-            }
-            
-            async sendMessage() {
-                const message = this.messageInput.value.trim();
-                if (!message) return;
-                
-                // Remove welcome message on first interaction
-                const welcomeMsg = document.querySelector('.welcome-message');
-                if (welcomeMsg) {
-                    welcomeMsg.style.transition = 'opacity 0.5s';
-                    welcomeMsg.style.opacity = '0';
-                    setTimeout(() => welcomeMsg.remove(), 500);
-                }
-                
-                // Add user message
-                this.addMessage(message, 'user');
-                this.messageInput.value = '';
-                this.setLoading(true);
-                
-                // Simulate thinking time
-                setTimeout(() => {
-                    const response = this.findResponse(message);
-                    this.addMessage(response, 'bot');
-                    this.setLoading(false);
-                }, 800 + Math.random() * 1200); // Random delay between 0.8-2s for realism
-            }
-            
-            addMessage(content, sender, timestamp = null) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                
-                const currentTime = timestamp || new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                
-                messageDiv.innerHTML = `
-                    <div class="message-content">
-                        ${content}
-                        <div class="message-time">${currentTime}</div>
-                    </div>
-                `;
-                
-                this.chatMessages.appendChild(messageDiv);
-                this.scrollToBottom();
-            }
-            
-            setLoading(isLoading) {
-                if (isLoading) {
-                    this.sendButton.disabled = true;
-                    this.messageInput.disabled = true;
-                    this.showTypingIndicator();
-                } else {
-                    this.sendButton.disabled = false;
-                    this.messageInput.disabled = false;
-                    this.hideTypingIndicator();
-                    this.messageInput.focus();
-                }
-            }
-            
-            showTypingIndicator() {
-                const typingDiv = document.createElement('div');
-                typingDiv.className = 'typing-indicator';
-                typingDiv.id = 'typingIndicator';
-                typingDiv.innerHTML = `
-                    <div class="typing-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                `;
-                
-                this.chatMessages.appendChild(typingDiv);
-                typingDiv.style.display = 'block';
-                this.scrollToBottom();
-            }
-            
-            hideTypingIndicator() {
-                const typingIndicator = document.getElementById('typingIndicator');
-                if (typingIndicator) {
-                    typingIndicator.remove();
-                }
-            }
-            
-            scrollToBottom() {
-                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-            }
-        }
-        
-        // Initialize the chatbot when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new StaticChatBot();
-            
-            // Add some demo messages after a short delay
-            setTimeout(() => {
-                console.log('🤖 AI ChatBot loaded successfully!');
-                console.log('💡 Try asking: "What is AI?", "Who created you?", "What can you do?"');
-            }, 1000);
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    function appendMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.textContent = text;
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendMessage(message, "user");
+      input.value = "";
+
+      try {
+        const response = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
         });
-    </script>
+        const data = await response.json();
+        appendMessage(data.response || "⚠️ Error", "bot");
+      } catch (err) {
+        appendMessage("⚠️ Connection error", "bot");
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
 </body>
 </html>

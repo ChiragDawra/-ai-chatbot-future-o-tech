@@ -1,70 +1,79 @@
-from flask import Flask, render_template, request, jsonify
-import json
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+import openai
 import os
-from src.enhanced_chatbot import EnhancedChatBot
-from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'
+app.secret_key = "your_secret_key_here"   # Change to a secure random string
 
-# Initialize the enhanced chatbot
-chatbot = EnhancedChatBot()
+# Store users (for demo purpose only – use DB in production!)
+users = {"test": "1234"}  # username: password
 
-@app.route('/')
-def index():
-    """Main page with chat interface"""
-    return render_template('index.html')
+# Load OpenAI API key from env
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-@app.route('/chat', methods=['POST'])
+
+# ---------------- AUTH ROUTES ----------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username in users and users[username] == password:
+            session["user"] = username
+            return redirect(url_for("home"))
+        return render_template("login.html", error="Invalid credentials")
+    return render_template("login.html")
+
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username in users:
+            return render_template("signup.html", error="User already exists")
+        users[username] = password
+        session["user"] = username
+        return redirect(url_for("home"))
+    return render_template("signup.html")
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("login"))
+
+
+# ---------------- CHAT ROUTES ----------------
+@app.route("/")
+def home():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    return render_template("index.html", user=session["user"])
+
+
+@app.route("/chat", methods=["POST"])
 def chat():
-    """Handle chat requests"""
+    if "user" not in session:
+        return jsonify({"response": "⚠️ Please login first"})
+
+    user_message = request.json.get("message")
+
     try:
-        user_message = request.json.get('message', '').strip()
-        
-        if not user_message:
-            return jsonify({'error': 'No message provided'}), 400
-        
-        # Get response from chatbot
-        bot_response = chatbot.get_response(user_message)
-        
-        # Log the conversation
-        log_conversation(user_message, bot_response)
-        
-        return jsonify({
-            'response': bot_response,
-            'timestamp': datetime.now().strftime('%H:%M')
-        })
-    
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful AI chatbot."},
+                {"role": "user", "content": user_message}
+            ]
+        )
+        bot_reply = response["choices"][0]["message"]["content"]
+        return jsonify({"response": bot_reply})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"response": f"⚠️ Error: {str(e)}"})
 
-@app.route('/health')
-def health():
-    """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'chatbot': 'ready'})
 
-def log_conversation(user_msg, bot_msg):
-    """Log conversations for analysis"""
-    log_entry = {
-        'timestamp': datetime.now().isoformat(),
-        'user': user_msg,
-        'bot': bot_msg
-    }
-    
-    log_file = 'data/conversation_logs.jsonl'
-    os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    
-    with open(log_file, 'a') as f:
-        f.write(json.dumps(log_entry) + '\n')
-
-if __name__ == '__main__':
-    print("🤖 Starting AI ChatBot...")
-    port = int(os.environ.get('PORT', 5000))
-    debug_mode = os.environ.get('FLASK_ENV') != 'production'
-    
-    if debug_mode:
-        print("🌐 Visit: http://localhost:5000")
-    else:
-        print("🌐 Production mode - running on all interfaces")
-    
-    app.run(debug=debug_mode, host='0.0.0.0', port=port)
+if __name__ == "__main__":
+    app.run(debug=True)
