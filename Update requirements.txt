@@ -1,0 +1,4 @@
+flask==2.3.3
+transformers==4.33.2
+torch==2.5.0
+gunicorn==21.2.0
